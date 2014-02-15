@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html data-ng-app="Pray" data-ng-controller="AppCtrl" data-ng-init="init()">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+    <title>Upcoming</title>
+
+    <%= stylesheet_link_tag "all" %>
+  </head>
+  <body>
+
+    <main>
+      <p data-ng-repeat="prayer in prayers track by $index" data-ng-class="{ current: prayer.current() }">
+        <strong>{{ prayer.name.capitalize() }}</strong> {{ relative(prayer) }}
+      </p>
+    </main>
+
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
+    <%= javascript_include_tag "all" %>
+  </body>
+</html>
