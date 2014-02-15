@@ -22,3 +22,7 @@ configure :build do
   # GZIP time
   # activate :gzip
 end
+
+activate :deploy do |deploy|
+  deploy.method = :git
+end
