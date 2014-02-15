@@ -11,7 +11,7 @@ $primary: #29e260;
 * { @include box-sizing(border-box); }
 
 html {
-  font: 100 24px/1.618 "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font: 300 24px/1.618 "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   height: 100%;
   width: 100%;
 }
@@ -46,7 +46,7 @@ p {
 }
 
 strong {
-  font-weight: 300;
+  font-weight: 500;
 }
 
 ::selection {
