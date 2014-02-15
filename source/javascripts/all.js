@@ -1,2 +1,2 @@
-//= require praytimes.js
-//= require app.coffee
+//= require _times
+//= require _app
