@@ -10,15 +10,17 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
 
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="apple-touch-icon" href="/levitation.png">
 
     <%= stylesheet_link_tag "all" %>
   </head>
-  <body>
+  <body data-ng-click="current.checkin()" data-ng-tap="current.checkin()" data-ng-class="{ done: done() }">
 
     <main>
-      <p data-ng-repeat="prayer in prayers track by $index" data-ng-class="{ current: prayer.current() }">
-        <strong>{{ prayer.name.capitalize() }}</strong> {{ relative(prayer) }}
+      <h1 data-ng-class="{ done: done() }">&#xfdfd;</h1>
+      <p data-ng-repeat="prayer in prayers track by $index" data-ng-class="{ current: prayer.current() && !prayer.done }">
+        {{ prayer.name.capitalize() }} {{ relative(prayer) }}
       </p>
     </main>
 

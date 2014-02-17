@@ -101,6 +101,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  middleman (~> 3.2.0)
+  middleman
   middleman-deploy
-  middleman-livereload (~> 3.1.0)
+  middleman-livereload

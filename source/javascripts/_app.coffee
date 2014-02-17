@@ -1,7 +1,8 @@
 app = angular.module "Pray", []
 
 app.controller "AppCtrl",
-['$scope', '$filter', '$interval', ($scope, $filter, $interval) ->
+['$scope', '$filter', '$timeout', '$interval',
+($scope, $filter, $timeout, $interval) ->
 
   # Extending functions
   # ===================
@@ -24,12 +25,16 @@ app.controller "AppCtrl",
 
 
   class Prayer
-    constructor: (@name, @after, @before, @points) ->
+    constructor: (@name, @after, @before, @points, @done) ->
       @after = new Date clean @after
       @before = new Date clean @before
+      @done = false
 
     current: ->
-      if @after < new Date() < @before then true else false
+      if @after < $scope.now < @before then true else false
+
+    checkin: ->
+      @done = !@done
 
 
   # Initialize
@@ -49,7 +54,10 @@ app.controller "AppCtrl",
         name = (if points[0] == "fajr" then "sobh" else points[0])
         after = $scope.times[points[0]]
         before = $scope.times[points[1]]
-        new Prayer(name, after, before, points)
+        prayer = new Prayer(name, after, before, points, false)
+
+    for prayer in $scope.prayers
+      $scope.current = prayer if prayer.current()
 
     $interval ->
       $scope.update true
@@ -67,6 +75,7 @@ app.controller "AppCtrl",
       for prayer in $scope.prayers
         prayer.after = new Date clean $scope.times[prayer.points[0]]
         prayer.before = new Date clean $scope.times[prayer.points[1]]
+        $scope.current = prayer if prayer.current()
 
 
   $scope.relative = (prayer) ->
@@ -75,6 +84,9 @@ app.controller "AppCtrl",
       "by #{filter(prayer.before)}."
     else
       "between #{filter(prayer.after)} and #{filter(prayer.before)}."
+
+
+  $scope.done = -> (!$scope.current || $scope.current.done)
 
 
 ]
