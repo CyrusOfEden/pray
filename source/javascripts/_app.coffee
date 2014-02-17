@@ -86,7 +86,15 @@ app.controller "AppCtrl",
       "between #{filter(prayer.after)} and #{filter(prayer.before)}."
 
 
-  $scope.done = -> (!$scope.current || $scope.current.done)
+  $scope.direction = ->
+    kaaba = 0;
+    {
+      "-webkit-transform": "rotate(#{kaaba - 90}deg)",
+      "-moz-transform": "rotate(#{kaaba - 90}deg)",
+      "-ms-transform": "rotate(#{kaaba - 90}deg)",
+      "-o-transform": "rotate(#{kaaba - 90}deg)",
+      "transform": "rotate(#{kaaba - 90}deg)"
+    }
 
 
 ]

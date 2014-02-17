@@ -15,13 +15,15 @@
 
     <%= stylesheet_link_tag "all" %>
   </head>
-  <body data-ng-click="current.checkin()" data-ng-tap="current.checkin()" data-ng-class="{ done: done() }">
+  <body data-ng-click="current.checkin()" data-ng-tap="current.checkin()">
 
     <main>
-      <h1 data-ng-class="{ done: done() }">&#xfdfd;</h1>
+      <h1>&#xfdfd;</h1>
       <p data-ng-repeat="prayer in prayers track by $index" data-ng-class="{ current: prayer.current() && !prayer.done }">
         {{ prayer.name.capitalize() }} {{ relative(prayer) }}
       </p>
+
+      <h2 data-ng-style="direction()">&#10148;</h2>
     </main>
 
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>

@@ -6,6 +6,8 @@
 $white: #ffffff;
 $black: #222222;
 $primary: #29e260;
+$primary-light: lighten($primary, 30);
+$primary-dark: darken($primary, 15);
 // ---------
 
 * {
@@ -42,21 +44,30 @@ h1 {
   @include transition(all 200ms ease-out);
   font-size: 2.058rem;
   margin-bottom: 2.058rem;
-  opacity: 0.65;
-  &.done { opacity: 1; }
+  color: $primary-dark;
+}
+
+h2 {
+  @include transition(all 200ms ease-out);
+  display: inline-block;
+  font-size: 2.058rem;
+  position: fixed;
+  bottom: 2.058rem;
+  right: 0;
+  left: 0;
+  color: $primary-dark;
 }
 
 p {
   @include transition(all 200ms ease-out);
   cursor: default;
-  opacity: 0.65;
+  color: $primary-light;
   &.current {
     font-size: 1.618rem;
-    opacity: 1;
     margin: 0.618rem 0;
   }
-  &:hover, &:active {
-    opacity: 1;
+  &.current, &:hover, &:active {
+    color: $white;
   }
 }
 
