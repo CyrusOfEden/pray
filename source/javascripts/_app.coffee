@@ -1,8 +1,8 @@
 app = angular.module "Pray", []
 
 app.controller "AppCtrl",
-['$scope', '$filter', '$timeout', '$interval',
-($scope, $filter, $timeout, $interval) ->
+['$scope', '$filter', '$q', '$interval',
+($scope, $filter, $q, $interval) ->
 
   # Extending functions
   # ===================
@@ -15,53 +15,64 @@ app.controller "AppCtrl",
     new Date().setHours time[0], time[1], 0, 0
 
 
-  moments = [
-              ["fajr", "sunrise"],
-              ["zuhr", "asr"],
-              ["asr", "maghrib"],
-              ["maghrib", "isha"],
-              ["isha", "midnight"]
-            ]
-
-
   class Prayer
-    constructor: (@name, @after, @before, @points, @done) ->
+    constructor: (@name, @after, @before, @points) ->
       @after = new Date clean @after
       @before = new Date clean @before
-      @done = false
 
     current: ->
       if @after < $scope.now < @before then true else false
 
-    checkin: ->
-      @done = !@done
-
 
   # Initialize
   # ==========
-  $scope.init = ->
+  $scope.start = ->
     # Configuration variables
-    # =======================
     $scope.now = new Date()
-    $scope.location = [43.84, -79.47]
-    $scope.timezone = -Math.abs new Date().getTimezoneOffset() / 60
+    $scope.timezone = -(Math.abs(new Date().getTimezoneOffset() / 60))
 
-    # Get prayer times
-    $scope.update()
+    defer = $q.defer()
+    navigator.geolocation.watchPosition (position) ->
+      latitude = Number position.coords.latitude.toFixed 3
+      longitude = Number position.coords.longitude.toFixed 3
+      heading = position.coords.heading || 0
 
+      $scope.location = [latitude, longitude, heading]
+
+      rad = (number) -> number * (Math.PI / 180)
+      deg = (number) -> number * (180 / Math.PI)
+
+      location = [rad(latitude), rad(longitude)]
+      kaaba = [rad(21.423), rad(39.826)]
+      delta = [location[0] - kaaba[0], location[1] - kaaba[1]]
+
+      y = Math.sin(delta[1]) * Math.cos(location[0])
+      x = Math.cos(kaaba[0]) * Math.sin(location[0]) -
+          Math.sin(kaaba[0]) * Math.cos(location[0]) * Math.cos(delta[1])
+      $scope.direction = 360 - (deg(Math.atan2(y, x)) + 360) % 360
+
+      defer.resolve()
+
+    defer.promise
+      .then $scope.update
+      .then $scope.init
+      .then $scope.point
+
+
+  $scope.init = ->
+    moments = [
+                ["fajr", "sunrise"],
+                ["zuhr", "asr"],
+                ["asr", "maghrib"],
+                ["maghrib", "isha"],
+                ["isha", "midnight"]
+              ]
     $scope.prayers = do ->
       for points in moments
         name = (if points[0] == "fajr" then "sobh" else points[0])
         after = $scope.times[points[0]]
         before = $scope.times[points[1]]
-        prayer = new Prayer(name, after, before, points, false)
-
-    for prayer in $scope.prayers
-      $scope.current = prayer if prayer.current()
-
-    $interval ->
-      $scope.update true
-    , 30000
+        prayer = new Prayer name, after, before, points
 
 
   $scope.update = (set = false) ->
@@ -86,14 +97,14 @@ app.controller "AppCtrl",
       "between #{filter(prayer.after)} and #{filter(prayer.before)}."
 
 
-  $scope.direction = ->
-    kaaba = 0;
-    {
-      "-webkit-transform": "rotate(#{kaaba - 90}deg)",
-      "-moz-transform": "rotate(#{kaaba - 90}deg)",
-      "-ms-transform": "rotate(#{kaaba - 90}deg)",
-      "-o-transform": "rotate(#{kaaba - 90}deg)",
-      "transform": "rotate(#{kaaba - 90}deg)"
+  $scope.point = ->
+    direction = $scope.direction - $scope.location[2] - 90
+    $scope.bearing = {
+      "-webkit-transform": "rotate(#{direction}deg)",
+      "-moz-transform": "rotate(#{direction}deg)",
+      "-ms-transform": "rotate(#{direction}deg)",
+      "-o-transform": "rotate(#{direction}deg)",
+      "transform": "rotate(#{direction}deg)"
     }
 
 
