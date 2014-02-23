@@ -53,7 +53,9 @@ app.controller "AppCtrl",
       .then $scope.update
       .then $scope.init
       .then $scope.point
-      .then -> $scope.ready = true
+      .then ->
+        $scope.state = "upcoming"
+        $scope.ready = true
 
 
   $scope.init = ->

@@ -32,7 +32,16 @@ body {
   color: $white;
   background: $primary;
   opacity: 0;
-  &.ready { opacity: 1; }
+}
+
+nav {
+  position: fixed;
+  top: 0; bottom: 0;
+  height: 100%;
+  width: 10%;
+  z-index: 100;
+  &.upcoming { right: 0; }
+  &.forecast { left: 0; }
 }
 
 main {
@@ -40,6 +49,14 @@ main {
   width: 100%;
   padding: 2.618rem 0;
   text-align: center;
+}
+
+section {
+  @include transition(transform 250ms ease-out, opacity 500ms ease-out);
+  opacity: 0;
+  &.upcoming { @include transform(translateX(-50%)); }
+  &.forecast { @include transform(translateX(50%)); }
+  &.show { @include transform(translateX(0)); }
 }
 
 h1 {
@@ -74,6 +91,8 @@ p {
 strong {
   font-weight: 500;
 }
+
+.show { opacity: 1; }
 
 @media screen and (max-width: 640px) { html { font-size: 16px; } }
 @media screen and (min-width: 1280px) { html { font-size: 32px; } }

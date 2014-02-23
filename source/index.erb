@@ -14,14 +14,19 @@
 
     <%= stylesheet_link_tag "app" %>
   </head>
-  <body data-ng-app="Pray" data-ng-controller="AppCtrl" data-ng-init="start()" data-ng-class="{ ready: ready }">
+  <body data-ng-app="Pray" data-ng-controller="AppCtrl" data-ng-init="start()" data-ng-class="{ show: ready }">
 
+    <nav data-ng-click="state = state == 'upcoming' ? 'forecast' : 'upcoming'" data-ng-class="state"></nav>
     <main>
       <h1>&#xfdfd;</h1>
-      <p data-ng-repeat="prayer in prayers track by $index" data-ng-class="{ current: prayer.current() }">
-        <strong>{{ prayer.name.capitalize() }}</strong> {{ relative(prayer) }}
-      </p>
+      <section class="upcoming" data-ng-class="{ show: state == 'upcoming' }">
+        <p data-ng-repeat="prayer in prayers track by $index" data-ng-class="{ current: prayer.current() }">
+          <strong>{{ prayer.name.capitalize() }}</strong> {{ relative(prayer) }}
+        </p>
+      </section>
+      <section class="forecast" data-ng-class="{ show: state == 'forecast' }">
 
+      </section>
       <h2 data-ng-style="bearing">&#10148;</h2>
     </main>
 
