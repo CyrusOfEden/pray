@@ -10,23 +10,22 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
 
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="apple-touch-icon" href="/levitation.png">
 
-    <%= stylesheet_link_tag "all" %>
+    <%= stylesheet_link_tag "app" %>
   </head>
-  <body data-ng-app="Pray" data-ng-controller="AppCtrl" data-ng-init="start()">
+  <body data-ng-app="Pray" data-ng-controller="AppCtrl" data-ng-init="start()" data-ng-class="{ ready: ready }">
 
     <main>
       <h1>&#xfdfd;</h1>
       <p data-ng-repeat="prayer in prayers track by $index" data-ng-class="{ current: prayer.current() }">
-        {{ prayer.name.capitalize() }} {{ relative(prayer) }}
+        <strong>{{ prayer.name.capitalize() }}</strong> {{ relative(prayer) }}
       </p>
 
       <h2 data-ng-style="bearing">&#10148;</h2>
     </main>
 
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
-    <%= javascript_include_tag "all" %>
+    <%= javascript_include_tag "app" %>
   </body>
 </html>

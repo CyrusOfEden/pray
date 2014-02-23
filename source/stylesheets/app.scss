@@ -24,13 +24,15 @@ html {
 }
 
 body {
-  @include transition(background 200ms ease-out);
+  @include transition(background 250ms ease-out, opacity 250ms ease-out);
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
   color: $white;
   background: $primary;
+  opacity: 0;
+  &.ready { opacity: 1; }
 }
 
 main {
@@ -41,14 +43,14 @@ main {
 }
 
 h1 {
-  @include transition(all 200ms ease-out);
+  @include transition(all 250ms ease-out);
   font-size: 2.058rem;
   margin-bottom: 2.058rem;
   color: $primary-dark;
 }
 
 h2 {
-  @include transition(all 200ms ease-out);
+  @include transition(all 250ms ease-out);
   display: inline-block;
   font-size: 2.058rem;
   position: fixed;
@@ -59,16 +61,18 @@ h2 {
 }
 
 p {
-  @include transition(all 200ms ease-out);
+  @include transition(all 250ms ease-out);
   cursor: default;
   color: $primary-light;
   &.current {
+    color: $white;
     font-size: 1.618rem;
     margin: 0.618rem 0;
   }
-  &.current, &:hover, &:active {
-    color: $white;
-  }
+}
+
+strong {
+  font-weight: 500;
 }
 
 @media screen and (max-width: 640px) { html { font-size: 16px; } }

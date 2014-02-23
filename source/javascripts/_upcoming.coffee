@@ -16,21 +16,17 @@ app.controller "AppCtrl",
 
 
   class Prayer
-    constructor: (@name, @after, @before, @points) ->
-      @after = new Date clean @after
-      @before = new Date clean @before
+    constructor: (@name, @after, @before, @points, @offset) ->
+      @after = new Date clean(@after) + offset * 24 * 60 * 60 * 1000
+      @before = new Date clean(@before) + offset * 24 * 60 * 60 * 1000
 
-    current: ->
-      if @after < $scope.now < @before then true else false
+    current: -> @after < new Date() < @before
+    past: -> @after < new Date()
 
 
   # Initialize
   # ==========
   $scope.start = ->
-    # Configuration variables
-    $scope.now = new Date()
-    $scope.timezone = -(Math.abs(new Date().getTimezoneOffset() / 60))
-
     defer = $q.defer()
     navigator.geolocation.watchPosition (position) ->
       latitude = Number position.coords.latitude.toFixed 3
@@ -57,6 +53,7 @@ app.controller "AppCtrl",
       .then $scope.update
       .then $scope.init
       .then $scope.point
+      .then -> $scope.ready = true
 
 
   $scope.init = ->
@@ -67,26 +64,44 @@ app.controller "AppCtrl",
                 ["maghrib", "isha"],
                 ["isha", "midnight"]
               ]
-    $scope.prayers = do ->
-      for points in moments
-        name = (if points[0] == "fajr" then "sobh" else points[0])
-        after = $scope.times[points[0]]
-        before = $scope.times[points[1]]
-        prayer = new Prayer name, after, before, points
+    days =
+      for day in ["today", "tomorrow"]
+        for points in moments
+          name = (if points[0] == "fajr" then "sobh" else points[0])
+          after = $scope[day][points[0]]
+          before = $scope[day][points[1]]
+          offset = (if day == "today" then 0 else 1)
+          prayer = new Prayer name, after, before, points, offset
+
+    prayers = [].concat.apply([], days)
+    current = do ->
+      now = next = null
+      for num in [0..9]
+        if prayers[num].current()
+          now = num
+          break
+        if prayers[num].past()
+          next ||= num + 1
+      now || next
+
+    $scope.prayers = prayers.splice current, 5
 
 
-  $scope.update = (set = false) ->
+
+  $scope.update = ->
+    # Get the timezone
+    $scope.timezone = -Math.abs new Date().getTimezoneOffset() / 60
+    # Set today
+    today = new Date()
     # Get prayer times
-    $scope.times = PrayTimes.getTimes $scope.now, $scope.location, $scope.timezone
+    $scope.today = PrayTimes.getTimes today, $scope.location, $scope.timezone
+    # Set tomorrow
+    tomorrow = new Date today.getTime() + 24 * 60 * 60 * 1000
+    # Get tomorrow's times
+    $scope.tomorrow = PrayTimes.getTimes tomorrow, $scope.location, $scope.timezone
     # Compensate for varying midnight times
-    $scope.times.midnight = "24:00"
+    $scope.today.midnight = $scope.tomorrow.midnight = "24:00"
 
-    # Update prayers
-    if set
-      for prayer in $scope.prayers
-        prayer.after = new Date clean $scope.times[prayer.points[0]]
-        prayer.before = new Date clean $scope.times[prayer.points[1]]
-        $scope.current = prayer if prayer.current()
 
 
   $scope.relative = (prayer) ->
