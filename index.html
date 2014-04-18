@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html data-ng-app="Pray" data-ng-controller="AppCtrl" data-ng-init="start()">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui">
+
+    <title ng-bind="title()">Pray</title>
+
+    <meta name="apple-mobile-web-app-title" content="Pray">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <link rel="apple-touch-icon" href="/levitation-7bc287a1.png">
+    <link rel="apple-touch-startup-image" href="/levitation-7bc287a1.png">
+
+    <style>html { -webkit-text-size-adjust: 100%; }</style>
+    <script>document.ontouchstart = function(event) { event.preventDefault(); }</script>
+
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <link href="/stylesheets/app-0d5b63ef.css" media="screen" rel="stylesheet" type="text/css" />
+  </head>
+  <body data-ng-class="{ ready: ready }">
+
+    <main>
+      <h1>&#xfdfd;</h1>
+      <p data-ng-repeat="prayer in prayers track by $index" data-ng-class="{ current: prayer.current() }">
+        <strong ng-bind="prayer.name.capitalize()"></strong> <span class="relative" ng-bind="relative(prayer)"></span>
+      </p>
+      <h2 data-ng-style="{ 'transform': course, '-webkit-transform': course, '-moz-transform': course, '-ms-transform': course, 'opacity': courseOpacity }">&#10148;</h2>
+    </main>
+
+    <script src="/javascripts/app-fc08eb6c.js" type="text/javascript"></script>
+  </body>
+</html>
